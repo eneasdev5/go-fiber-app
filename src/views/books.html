@@ -1,0 +1,38 @@
+{% extends "layouts/template.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<ul>
+    {% for entry in blog_entries %}
+    <li>{{ entry.title }}</li>
+    <li>{{ entry.body }}</li>
+    {% endfor %}
+</ul>
+
+<div>
+    <h2>Lista Books</h2>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Total Páginas</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+        {% if books %}
+        {% for book in books %}
+        <tr>
+            <td>{{book.Title}}</td>
+            <td>{{book.TotalPage}}</td>
+            <td>{{book.Author}}</td>
+            <td><a href="/home?id=10">Edit</a></td>
+            {% endfor %}
+            {% else %}
+            <td rowspan="3">Não há books registrados!</td>
+        </tr>
+        {% endif %}
+    </table>
+
+</div>
+
+{% endblock %}
