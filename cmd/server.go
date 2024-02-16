@@ -17,7 +17,7 @@ type Dados struct {
 
 func main() {
 	// define the engine views
-	engine := django.New("./src/views", ".html")
+	engine := django.New("../src/views", ".html")
 
 	// new instance struct fiber
 	app := fiber.New(fiber.Config{
