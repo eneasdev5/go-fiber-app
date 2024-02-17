@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/template/django/v3"
-	"github.com/joho/godotenv"
 )
 
 type Dados struct {
@@ -19,10 +18,11 @@ type Dados struct {
 }
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic(err)
-	}
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	panic(err)
+	// }
+
 	dbConnect := database.Connect()
 	repository := mysql.NewMysqlDBRepositoryBook(dbConnect)
 
