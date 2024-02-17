@@ -3,7 +3,7 @@ package main
 import (
 	"strconv"
 
-	"github.com/eneasdev5/go-fiber-app/src/database"
+	"github.com/eneasdev5/go-fiber-app/src/repository/mysql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/template/django/v3"
@@ -25,7 +25,7 @@ func main() {
 	})
 
 	// request database
-	bookService := database.NewBook()
+	bookService := mysql.NewBook()
 
 	// routes to app
 	app.Get("/", func(c *fiber.Ctx) error {

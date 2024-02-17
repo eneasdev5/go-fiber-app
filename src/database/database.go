@@ -1,39 +1,38 @@
 package database
 
-type Book struct {
-	Title     string
-	TotalPage int
-	Author    string
+import (
+	"database/sql"
+	"fmt"
+	"os"
+	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+)
+
+func settingsDatabaseConnectRemote() string {
+	var (
+		DB_USER     string = os.Getenv("DB_USER")
+		DB_PASSWORD string = os.Getenv("DB_PASSWORD")
+		DB_HOST     string = os.Getenv("DB_HOST")
+		DB_PORT     string = os.Getenv("DB_PORT")
+		DB_NAME     string = os.Getenv("DB_NAME")
+	)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME,
+	)
 }
 
-type IBook interface {
-	GetAllBook() []Book
-}
-
-func NewBook() IBook {
-	return &Book{}
-}
-
-func (b *Book) GetAllBook() []Book {
-	return loadBooks()
-}
-
-func loadBooks() []Book {
-	return []Book{
-		{
-			Title:     "Domine Seu Foco",
-			TotalPage: 60,
-			Author:    "I. C. ROBLEDO",
-		},
-		{
-			Title:     "Mente Suprema",
-			TotalPage: 28,
-			Author:    "Desconhecido",
-		},
-		{
-			Title:     "MindSet",
-			TotalPage: 120,
-			Author:    "Carol S. Dweck",
-		},
+func Connect() *sql.DB {
+	conn, err := sql.Open("mysql", settingsDatabaseConnectRemote())
+	if err != nil {
+		panic(err)
 	}
+	conn.SetConnMaxLifetime(time.Minute * 3)
+	conn.SetMaxOpenConns(10)
+	conn.SetMaxIdleConns(10)
+
+	if err := conn.Ping(); err != nil {
+		panic(err)
+	}
+	return conn
 }
