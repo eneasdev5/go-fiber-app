@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strconv"
-
 	"github.com/eneasdev5/go-fiber-app/src/database"
 	"github.com/eneasdev5/go-fiber-app/src/domain"
 	"github.com/eneasdev5/go-fiber-app/src/repository/mysql"
@@ -18,11 +16,6 @@ type Dados struct {
 }
 
 func main() {
-	// err := godotenv.Load(".env")
-	// if err != nil {
-	// 	panic(err)
-	// }
-
 	dbConnect := database.Connect()
 	repository := mysql.NewMysqlDBRepositoryBook(dbConnect)
 
@@ -33,9 +26,6 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
-
-	// request database
-	bookService := mysql.NewBook()
 
 	// routes to app
 	app.Get("/books", func(c *fiber.Ctx) error {
@@ -50,7 +40,6 @@ func main() {
 			"books": books,
 		})
 	})
-	// Store
 
 	app.Post("/books", func(c *fiber.Ctx) error {
 		b := domain.Book{
@@ -77,14 +66,7 @@ func main() {
 		})
 	})
 
-	app.Get("/books", func(c *fiber.Ctx) error {
-		return c.Render("books", fiber.Map{
-			"title": "Page Books",
-			"books": bookService.GetAllBook(),
-		})
-	})
-
-	app.Get("/home", func(c *fiber.Ctx) error {
+	app.Get("/params", func(c *fiber.Ctx) error {
 		d := new(Dados)
 
 		if err := c.QueryParser(d); err != nil {
@@ -98,27 +80,6 @@ func main() {
 			"parse":     d,
 			"queries":   c.Queries(),
 		})
-	})
-
-	app.Get("/api/users/:id", func(c *fiber.Ctx) error {
-		person := struct {
-			ID   int    `json:"id"`
-			Nome string `json:"nome"`
-		}{5, "Eneas"}
-
-		id := c.Params("id")
-		if id != "" {
-			paramId, err := strconv.ParseInt(id, 10, 64)
-			if err != nil {
-				return err
-			}
-			if paramId == int64(person.ID) {
-				return c.JSON(person)
-			}
-		}
-
-		c.Response().SetStatusCode(fiber.StatusNoContent)
-		return c.JSON(nil)
 	})
 
 	// expose resource files static
